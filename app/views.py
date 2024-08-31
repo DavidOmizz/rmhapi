@@ -21,6 +21,9 @@ class ContactListCreateView(generics.ListCreateAPIView):
             # Send contact email
             send_contact_email(serializer.validated_data['email'], serializer.validated_data['name'])
 
+             # Send internal email to yourself
+            send_internal_email(serializer.validated_data)
+
             return Response({"message": "Thank you for your message."}, status=status.HTTP_201_CREATED, headers=headers)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -40,6 +43,7 @@ class NewsletterSubscriptionListCreateView(generics.ListCreateAPIView):
             
             # Send subscription email
             send_newsletter_subscription_email(serializer.validated_data['email'], subscription.email)
+            send_internal_newsletter_subscription_email(serializer.validated_data)
 
             headers = self.get_success_headers(serializer.data)
             return Response({"message": "Thank you for subscribing to our newsletter."}, status=status.HTTP_201_CREATED, headers=headers)
